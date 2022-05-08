@@ -30,7 +30,6 @@ def dowloader(search):
 
         image_urls = set()
         skips = 0
-        found = False
 
         while len(image_urls) + skips < max_images:
             scroll_down(wd)
@@ -55,12 +54,10 @@ def dowloader(search):
                         image_urls.add(image.get_attribute('src'))
                         st=f"Found {len(image_urls)}"
                         stalab.config(text=st)
-                        found = True
-                if(found):
-                    print(st)
-                
+                        print(st)
 
         return image_urls
+
 
     def download_image(download_path, url, file_name):
         try:
@@ -84,8 +81,9 @@ def dowloader(search):
 
     wd.quit()
 
-logo= Label(window, font=('KaiTi', 30, 'bold'), bg="white",foreground='RED', text="Rudra")
+logo= Label(window, font=('KaiTi', 30, 'bold'), bg="white",fg='RED', text="Rudra")
 logo.place(x=220, y=20)
+
 imagelab = Label(window, font=('Aerial', 20, 'bold'), bg="white",
                foreground='Blue', text="Search For Image")
 imagelab.place(x=140, y=100)
