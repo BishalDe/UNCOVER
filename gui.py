@@ -30,6 +30,7 @@ def dowloader(search):
 
         image_urls = set()
         skips = 0
+        turns=0
 
         while len(image_urls) + skips < max_images:
             scroll_down(wd)
@@ -53,8 +54,12 @@ def dowloader(search):
                     if image.get_attribute('src') and 'http' in image.get_attribute('src'):
                         image_urls.add(image.get_attribute('src'))
                         st=f"Found {len(image_urls)}"
-                        stalab.config(text=st)
                         print(st)
+
+                        download_image("images/",image.get_attribute('src'),str(turns) + ".jpg")
+
+                        stalab.config(text=st)
+                        turns+=1
 
         return image_urls
 
@@ -72,12 +77,8 @@ def dowloader(search):
             print("Success")
         except Exception as e:
             print('FAILED -', e)
-
-    urls = get_images_from_google(wd, 1, 5)
-
-    for i, url in enumerate(urls):
-        pt="images/"+search
-        download_image("images/", url, str(i) + ".jpg")
+    totalimages=int(input("Enter the number of images :-"))
+    urls = get_images_from_google(wd, 1, totalimages)
 
     wd.quit()
 
