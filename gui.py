@@ -15,10 +15,10 @@ window.resizable(0, 0)
 
 
 def dowloader(search):
-
     PATH = "/usr/bin/chromedriver"
-
-    wd = webdriver.Chrome(PATH)
+    option = webdriver.ChromeOptions()
+    option.add_argument('headless')
+    wd = webdriver.Chrome(PATH,options=option)
 
     def get_images_from_google(wd, delay, max_images):
         def scroll_down(wd):
