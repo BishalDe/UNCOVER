@@ -1,4 +1,6 @@
 from tkinter import *
+from tkinter import ttk
+from tkinter.messagebox import showinfo
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 import requests
@@ -70,6 +72,7 @@ def dowloader(search):
                 image.save(f, "JPEG")
 
             print("Success")
+            progress()
         except Exception as e:
             print('FAILED -', e)
 
@@ -102,5 +105,44 @@ cancelbutton.place(x=300, y=200)
 stalab = Label(window, font=('Aerial', 10, 'bold'), bg="white",
                foreground='Blue', text="")
 stalab.place(x=300, y=300)
+
+# ====================== Progression Bar Code ======================== #
+
+def update_progress_label():
+    return f"Current Progress: {pb['value']}"
+
+
+def progress():
+    if pb['value'] < 6:
+        pb['value'] += 1
+        value_label['text'] = update_progress_label()
+    else:
+        showinfo(message='The progress completed!')
+
+
+def stop():
+    pb.stop()
+    value_label['text'] = update_progress_label()
+
+
+# progressbar
+pb = ttk.Progressbar(
+    window,
+    orient='horizontal',
+    mode='determinate',
+    length=280
+)
+# place the progressbar
+pb.place(x=160,y=250)
+
+# label
+value_label = Label(window, text=update_progress_label())
+value_label.place(x=220,y=280)
+stop_button = ttk.Button(
+    window,
+    text='Cancel',
+    command=stop
+)
+stop_button.place(x=260,y=320)
 
 window.mainloop()
