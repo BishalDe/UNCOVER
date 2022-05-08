@@ -32,6 +32,7 @@ def dowloader(search):
 
         image_urls = set()
         skips = 0
+        turns=0
 
         while len(image_urls) + skips < max_images:
             scroll_down(wd)
@@ -55,13 +56,18 @@ def dowloader(search):
                     if image.get_attribute('src') and 'http' in image.get_attribute('src'):
                         image_urls.add(image.get_attribute('src'))
                         st=f"Found {len(image_urls)}"
-                        stalab.config(text=st)
                         print(st)
+
+                        download_image("images/",image.get_attribute('src'),str(turns) + ".jpg",totalimages)
+                        progress(totalimages)
+
+                        stalab.config(text=st)
+                        turns+=1
 
         return image_urls
 
 
-    def download_image(download_path, url, file_name):
+    def download_image(download_path, url, file_name,totalImages):
         try:
             image_content = requests.get(url).content
             image_file = io.BytesIO(image_content)
@@ -72,15 +78,11 @@ def dowloader(search):
                 image.save(f, "JPEG")
 
             print("Success")
-            progress()
+            
         except Exception as e:
             print('FAILED -', e)
-
-    urls = get_images_from_google(wd, 1, 5)
-
-    for i, url in enumerate(urls):
-        pt="images/"+search
-        download_image("images/", url, str(i) + ".jpg")
+    totalimages=int(input("Enter the number of images :-"))
+    urls = get_images_from_google(wd, 1, totalimages)
 
     wd.quit()
 
@@ -106,14 +108,12 @@ stalab = Label(window, font=('Aerial', 10, 'bold'), bg="white",
                foreground='Blue', text="")
 stalab.place(x=300, y=300)
 
-# ====================== Progression Bar Code ======================== #
-
 def update_progress_label():
     return f"Current Progress: {pb['value']}"
 
 
-def progress():
-    if pb['value'] < 6:
+def progress(totalimages):
+    if pb['value'] < totalimages:
         pb['value'] += 1
         value_label['text'] = update_progress_label()
     else:
